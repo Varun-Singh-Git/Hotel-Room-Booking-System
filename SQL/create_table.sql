@@ -1,111 +1,126 @@
 /* =====================================================
-   HOTEL MANAGEMENT SYSTEM DATABASE
+   COMPLETE DATABASE using ER DIAGRAM 
    ===================================================== */
-
--- Optional: create database
 CREATE DATABASE HotelManagement;
 USE HotelManagement;
 
+/* =====================================================
+   CREATE NEW TABLES (MATCHING ER DIAGRAM)
+   ===================================================== */
 
-/* =========================
-   1. USERS TABLE
-   ========================= */
-CREATE TABLE Users (
-    user_id INT PRIMARY KEY,
-    user_name VARCHAR(100),
-    user_mobile VARCHAR(15),
-    user_email VARCHAR(100),
-    user_address VARCHAR(255)
-);
-
-
-/* =========================
-   2. ROLES TABLE
-   ========================= */
-CREATE TABLE Roles (
-    role_id INT PRIMARY KEY,
-    role_name VARCHAR(50),
-    role_desc VARCHAR(255)
-);
-
-
-/* =========================
-   3. LOGIN TABLE
-   ========================= */
-CREATE TABLE Login (
-    login_id INT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE,
-    user_password VARCHAR(255),
-    role_id INT,
-    user_id INT,
-
-    FOREIGN KEY (role_id) REFERENCES Roles(role_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
-
-/* =========================
-   4. PERMISSION TABLE
-   ========================= */
-CREATE TABLE Permission (
-    per_id INT PRIMARY KEY,
-    per_name VARCHAR(100),
-    per_module VARCHAR(100),
-    per_role_id INT,
-
-    FOREIGN KEY (per_role_id) REFERENCES Roles(role_id)
-);
-
-
-/* =========================
-   5. CUSTOMER TABLE
-   ========================= */
-CREATE TABLE Customer (
-    cus_id INT PRIMARY KEY,
-    cus_name VARCHAR(100),
-    cus_mobile VARCHAR(15),
-    cus_email VARCHAR(100),
-    cus_address VARCHAR(255),
-    cus_pass VARCHAR(255)
-);
-
-
-/* =========================
-   6. HOTEL TABLE
-   ========================= */
+-- HOTEL
 CREATE TABLE Hotel (
     hotel_id INT PRIMARY KEY,
-    hotel_name VARCHAR(100),
-    hotel_type VARCHAR(50),
-    hotel_desc VARCHAR(255),
-    hotel_rent DECIMAL(10,2)
+    name VARCHAR(100),
+    location VARCHAR(150)
 );
 
-
-/* =========================
-   7. BOOKING TABLE
-   ========================= */
-CREATE TABLE Booking (
-    book_id INT PRIMARY KEY,
-    book_type VARCHAR(50),
-    book_desc VARCHAR(255),
-    cus_id INT,
+-- ROOMS (Hotel HAS Rooms)
+CREATE TABLE Rooms (
+    room_id INT PRIMARY KEY,
     hotel_id INT,
+    FOREIGN KEY (hotel_id)
+        REFERENCES Hotel(hotel_id)
+        ON DELETE CASCADE
+);
 
-    FOREIGN KEY (cus_id) REFERENCES Customer(cus_id),
-    FOREIGN KEY (hotel_id) REFERENCES Hotel(hotel_id)
+-- CUSTOMER
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    address VARCHAR(255),
+    phone VARCHAR(15)
+);
+
+-- PAYMENT (Customer PAY)
+CREATE TABLE Payment (
+    payment_id INT PRIMARY KEY,
+    payment_method VARCHAR(50),
+    amount DECIMAL(10,2),
+    customer_id INT,
+    FOREIGN KEY (customer_id)
+        REFERENCES Customer(customer_id)
+        ON DELETE CASCADE
+);
+
+-- RESERVATION (Customer RESERVES Rooms)
+CREATE TABLE Reservation (
+    reservation_id INT PRIMARY KEY,
+    customer_id INT,
+    room_id INT,
+    FOREIGN KEY (customer_id)
+        REFERENCES Customer(customer_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (room_id)
+        REFERENCES Rooms(room_id)
+        ON DELETE CASCADE
 );
 
 
-/* =========================
-   8. PAYMENTS TABLE
-   ========================= */
-CREATE TABLE Payments (
-    pay_id INT PRIMARY KEY,
-    pay_date DATE,
-    pay_amt DECIMAL(10,2),
-    pay_desc VARCHAR(255),
-    pay_cus_id INT,
+/* =====================================================
+   VERIFY
+   ===================================================== */
 
-    FOREIGN KEY (pay_cus_id) REFERENCES Customer(cus_id)
-);
+SHOW TABLES;
+
++---------------------------+
+| Tables_in_hotelmanagement |
++---------------------------+
+| customer                  |
+| hotel                     |
+| payment                   |
+| reservation               |
+| rooms                     |
++---------------------------+
+   
+DESC Hotel;
+
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| hotel_id | int(11)      | NO   | PRI | NULL    |       |
+| name     | varchar(100) | YES  |     | NULL    |       |
+| location | varchar(150) | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+   
+DESC Rooms;
+
++----------+---------+------+-----+---------+-------+
+| Field    | Type    | Null | Key | Default | Extra |
++----------+---------+------+-----+---------+-------+
+| room_id  | int(11) | NO   | PRI | NULL    |       |
+| hotel_id | int(11) | YES  | MUL | NULL    |       |
++----------+---------+------+-----+---------+-------+
+   
+DESC Customer;
+
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customer_id | int(11)      | NO   | PRI | NULL    |       |
+| name        | varchar(100) | YES  |     | NULL    |       |
+| address     | varchar(255) | YES  |     | NULL    |       |
+| phone       | varchar(15)  | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+   
+DESC Payment;
+
++----------------+---------------+------+-----+---------+-------+
+| Field          | Type          | Null | Key | Default | Extra |
++----------------+---------------+------+-----+---------+-------+
+| payment_id     | int(11)       | NO   | PRI | NULL    |       |
+| payment_method | varchar(50)   | YES  |     | NULL    |       |
+| amount         | decimal(10,2) | YES  |     | NULL    |       |
+| customer_id    | int(11)       | YES  | MUL | NULL    |       |
++----------------+---------------+------+-----+---------+-------+
+   
+DESC Reservation;
+
++----------------+---------+------+-----+---------+-------+
+| Field          | Type    | Null | Key | Default | Extra |
++----------------+---------+------+-----+---------+-------+
+| reservation_id | int(11) | NO   | PRI | NULL    |       |
+| customer_id    | int(11) | YES  | MUL | NULL    |       |
+| room_id        | int(11) | YES  | MUL | NULL    |       |
++----------------+---------+------+-----+---------+-------+
+

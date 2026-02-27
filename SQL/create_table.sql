@@ -43,18 +43,6 @@ CREATE TABLE Payment (
         ON DELETE CASCADE
 );
 
--- RESERVATION (Customer RESERVES Rooms)
-CREATE TABLE Reservation (
-    reservation_id INT PRIMARY KEY,
-    customer_id INT,
-    room_id INT,
-    FOREIGN KEY (customer_id)
-        REFERENCES Customer(customer_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (room_id)
-        REFERENCES Rooms(room_id)
-        ON DELETE CASCADE
-);
 
 
 /* =====================================================
@@ -69,7 +57,6 @@ SHOW TABLES;
 | customer                  |
 | hotel                     |
 | payment                   |
-| reservation               |
 | rooms                     |
 +---------------------------+
    
@@ -113,14 +100,3 @@ DESC Payment;
 | amount         | decimal(10,2) | YES  |     | NULL    |       |
 | customer_id    | int(11)       | YES  | MUL | NULL    |       |
 +----------------+---------------+------+-----+---------+-------+
-   
-DESC Reservation;
-
-+----------------+---------+------+-----+---------+-------+
-| Field          | Type    | Null | Key | Default | Extra |
-+----------------+---------+------+-----+---------+-------+
-| reservation_id | int(11) | NO   | PRI | NULL    |       |
-| customer_id    | int(11) | YES  | MUL | NULL    |       |
-| room_id        | int(11) | YES  | MUL | NULL    |       |
-+----------------+---------+------+-----+---------+-------+
-

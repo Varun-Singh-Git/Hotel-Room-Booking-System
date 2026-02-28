@@ -21,7 +21,6 @@ CREATE TABLE Rooms (
     hotel_id INT,
     FOREIGN KEY (hotel_id)
         REFERENCES Hotel(hotel_id)
-        ON DELETE CASCADE
 );
 
 -- CUSTOMER
@@ -40,7 +39,6 @@ CREATE TABLE Payment (
     customer_id INT,
     FOREIGN KEY (customer_id)
         REFERENCES Customer(customer_id)
-        ON DELETE CASCADE
 );
 
 
@@ -100,3 +98,4 @@ DESC Payment;
 | amount         | decimal(10,2) | YES  |     | NULL    |       |
 | customer_id    | int(11)       | YES  | MUL | NULL    |       |
 +----------------+---------------+------+-----+---------+-------+
+
